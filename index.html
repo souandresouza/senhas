@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerador de Senhas</title>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css'>
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Montserrat&amp;display=swap'>
+  <style>
+    /* Estilo CSS completo */
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #1e1e1e;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .container {
+      width: 80%; /* Ocupa 80% da largura da tela */
+      max-width: 500px; /* Limita a largura máxima para telas maiores */
+      background: #2d2d2d;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    .title {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .result {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .result__viewbox {
+      font-size: 1.5rem;
+      background: #3d3d3d;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      word-wrap: break-word;
+      min-height: 40px;
+    }
+
+    .result__info {
+      font-size: 0.9rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .result__info.right {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .result__info.left {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .result:hover .result__info.right {
+      opacity: 1;
+    }
+
+    #copy-btn {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      color: #00ff99;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .length {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .length__title {
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    .length__value {
+      font-size: 1rem;
+      margin-left: 10px;
+      color: #00ff99;
+    }
+
+    input[type="range"] {
+      width: 70%;
+    }
+
+    .settings {
+      margin-bottom: 20px;
+    }
+
+    .setting {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .setting input[type="checkbox"] {
+      margin-right: 10px;
+    }
+
+    .btn {
+      background: #00ff99;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .btn:hover {
+      background: #00cc77;
+    }
+
+    /* Media Query para telas menores */
+    @media (max-width: 600px) {
+      .title {
+        font-size: 1.5rem;
+      }
+
+      .result__viewbox {
+        font-size: 1.2rem;
+      }
+
+      .result__info {
+        font-size: 0.8rem;
+      }
+
+      #copy-btn {
+        font-size: 1rem;
+      }
+
+      .length__title {
+        font-size: 0.9rem;
+      }
+
+      .length__value {
+        font-size: 0.9rem;
+      }
+
+      .setting {
+        font-size: 0.9rem;
+      }
+
+      .btn {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+    <h2 class="title">Gerador de senhas</h2>
+    <div class="result">
+        <div class="result__title field-title">Senha</div>
+        <div class="result__info right">clique para copiar</div>
+        <div class="result__info left">senha copiada</div>
+        <div class="result__viewbox" id="result"></div>
+        <button id="copy-btn" style="--x: 0; --y: 0"><i class="far fa-copy"></i></button>
+    </div>
+    <div class="length range__slider" data-min="4" data-max="32">
+        <div class="length__title field-title">Caracteres:</div>
+        <div class="length__controls">
+            <input id="slider" type="range" min="4" max="32" value="16" />
+            <span class="length__value" id="slider-value">16</span>
+        </div>
+    </div>
+    <div class="settings">
+        <span class="settings__title field-title">Configurações</span>
+        <div class="setting">
+            <input type="checkbox" id="uppercase" checked />
+            <label for="uppercase">Incluir letra maiúscula</label>
+        </div>
+        <div class="setting">
+            <input type="checkbox" id="lowercase" checked />
+            <label for="lowercase">Incluir letra minúscula</label>
+        </div>
+        <div class="setting">
+            <input type="checkbox" id="number" checked />
+            <label for="number">Incluir Números</label>
+        </div>
+        <div class="setting">
+            <input type="checkbox" id="symbol" />
+            <label for="symbol">Incluir Símbolos</label>
+        </div>
+    </div>
+    <button class="btn generate" id="generate">Gerar senha</button>
+</div>
+
+<script>
+  // Script para gerar senhas
+  const slider = document.getElementById('slider');
+  const sliderValue = document.getElementById('slider-value');
+  const result = document.getElementById('result');
+  const copyBtn = document.getElementById('copy-btn');
+  const generateBtn = document.getElementById('generate');
+
+  function generatePassword() {
+    const length = slider.value;
+    const includeUppercase = document.getElementById('uppercase').checked;
+    const includeLowercase = document.getElementById('lowercase').checked;
+    const includeNumbers = document.getElementById('number').checked;
+    const includeSymbols = document.getElementById('symbol').checked;
+
+    const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
+    const numberChars = '0123456789';
+    const symbolChars = '!@#$%^&*()_+[]{}|;:,.<>?';
+
+    let allowedChars = '';
+    let password = '';
+
+    if (includeUppercase) allowedChars += uppercaseChars;
+    if (includeLowercase) allowedChars += lowercaseChars;
+    if (includeNumbers) allowedChars += numberChars;
+    if (includeSymbols) allowedChars += symbolChars;
+
+    if (allowedChars === '') {
+      alert('Selecione pelo menos uma opção!');
+      return;
+    }
+
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * allowedChars.length);
+      password += allowedChars[randomIndex];
+    }
+
+    result.textContent = password;
+  }
+
+  generateBtn.addEventListener('click', generatePassword);
+
+  copyBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(result.textContent).then(() => {
+      const info = document.querySelector('.result__info.left');
+      info.style.opacity = '1';
+      setTimeout(() => {
+        info.style.opacity = '0';
+      }, 1000);
+    });
+  });
+
+  slider.addEventListener('input', () => {
+    sliderValue.textContent = slider.value;
+  });
+
+  // Inicializa o valor do slider no carregamento da página
+  sliderValue.textContent = slider.value;
+</script>
+</body>
+</html>
