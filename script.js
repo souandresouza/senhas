@@ -36,25 +36,46 @@ const randomFunc = {
 
 // Random more secure value
 function secureMathRandom() {
-	return window.crypto.getRandomValues(new Uint32Array(1))[0] / (Math.pow(2, 32) - 1);
+    return window.crypto.getRandomValues(new Uint32Array(1))[0] / (Math.pow(2, 32) - 1);
 }
 
-// Generator Functions
-// All the functions that are responsible to return a random value taht we will use to create password.
 function getRandomLower() {
-	return String.fromCharCode(Math.floor(Math.random() * 26) + 97);
+    return String.fromCharCode(Math.floor(secureMathRandom() * 26) + 97);
 }
 function getRandomUpper() {
-	return String.fromCharCode(Math.floor(Math.random() * 26) + 65);
+    return String.fromCharCode(Math.floor(secureMathRandom() * 26) + 65);
 }
 function getRandomNumber() {
-	return String.fromCharCode(Math.floor(secureMathRandom() * 10) + 48);
+    return String.fromCharCode(Math.floor(secureMathRandom() * 10) + 48);
 }
 function getRandomSymbol() {
-	const symbols = '~!@#$%^&*()_+{}":?><;.,';
-	return symbols[Math.floor(Math.random() * symbols.length)];
+    const symbols = '~!@#$%^&*()_+{}":?><;.,';
+    return symbols[Math.floor(secureMathRandom() * symbols.length)];
 }
 
+// Function responsible to generate password and then returning it.
+// Remove duplicate generatePassword function
+function generatePassword(length, lower, upper, number, symbol) {
+    let generatedPassword = "";
+    const typesCount = lower + upper + number + symbol;
+    const typesArr = [{ lower }, { upper }, { number }, { symbol }].filter(item => Object.values(item)[0]);
+
+    if (typesCount === 0) {
+        return "";
+    }
+
+    // Optimize the loop to generate the password
+    for (let i = 0; i < length; i += typesCount) {
+        typesArr.forEach(type => {
+            const funcName = Object.keys(type)[0];
+            generatedPassword += randomFunc[funcName]();
+        });
+    }
+
+    return generatedPassword.slice(0, length)
+                            .split('').sort(() => secureMathRandom() - 0.5)
+                            .join('');
+}
 
 const resultEl = document.getElementById("result");
 const lengthEl = document.getElementById("slider");
