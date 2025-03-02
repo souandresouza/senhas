@@ -1,5 +1,5 @@
 
-// Clear the concole on every refresh
+// Clear the console on every refresh
 console.clear();
 
 const sliderProps = {
@@ -8,7 +8,6 @@ const sliderProps = {
 };
 
 const slider = document.querySelector(".range__slider");
-
 const sliderValue = document.querySelector(".length__title");
 
 slider.querySelector("input").addEventListener("input", event => {
@@ -17,11 +16,11 @@ slider.querySelector("input").addEventListener("input", event => {
 });
 
 applyFill(slider.querySelector("input"));
-// This function is responsible to create the trailing color and setting the fill.
+
+// This function is responsible for creating the trailing color and setting the fill.
 function applyFill(slider) {
 	const percentage = (100 * (slider.value - slider.min)) / (slider.max - slider.min);
-	const bg = `linear-gradient(90deg, ${sliderProps.fill} ${percentage}%, ${sliderProps.background} ${percentage +
-			0.1}%)`;
+	const bg = `linear-gradient(90deg, ${sliderProps.fill} ${percentage}%, ${sliderProps.background} ${percentage + 0.1}%)`;
 	slider.style.background = bg;
 	sliderValue.setAttribute("data-length", slider.value);
 }
@@ -42,19 +41,21 @@ function secureMathRandom() {
 function getRandomLower() {
     return String.fromCharCode(Math.floor(secureMathRandom() * 26) + 97);
 }
+
 function getRandomUpper() {
     return String.fromCharCode(Math.floor(secureMathRandom() * 26) + 65);
 }
+
 function getRandomNumber() {
     return String.fromCharCode(Math.floor(secureMathRandom() * 10) + 48);
 }
+
 function getRandomSymbol() {
     const symbols = '~!@#$%^&*()_+{}":?><;.,';
     return symbols[Math.floor(secureMathRandom() * symbols.length)];
 }
 
-// Function responsible to generate password and then returning it.
-// Remove duplicate generatePassword function
+// Function responsible for generating password and then returning it.
 function generatePassword(length, lower, upper, number, symbol) {
     let generatedPassword = "";
     const typesCount = lower + upper + number + symbol;
@@ -80,7 +81,7 @@ function generatePassword(length, lower, upper, number, symbol) {
 const resultEl = document.getElementById("result");
 const lengthEl = document.getElementById("slider");
 
-// Checkboxes representing the options that is responsible to create differnt type of password based on user
+// Checkboxes representing the options that are responsible for creating different types of passwords based on user input
 const uppercaseEl = document.getElementById("uppercase");
 const lowercaseEl = document.getElementById("lowercase");
 const numberEl = document.getElementById("number");
@@ -92,43 +93,45 @@ const resultContainer = document.querySelector(".result");
 const copyInfo = document.querySelector(".result__info.right");
 const copiedInfo = document.querySelector(".result__info.left");
 
-// if this variable is trye only then the copyBtn will appear, i.e. when the user first click generate the copyBth will interact.
+// If this variable is true, only then the copyBtn will appear, i.e., when the user first clicks generate, the copyBtn will interact.
 let generatedPassword = false;
 
-// Update Css Props of the COPY button
+// Update CSS Props of the COPY button
 // Getting the bounds of the result viewbox container
 let resultContainerBound = {
 	left: resultContainer.getBoundingClientRect().left,
 	top: resultContainer.getBoundingClientRect().top,
 };
-// This will update the position of the copy button based on mouse Position
+
+// This will update the position of the copy button based on mouse position
 resultContainer.addEventListener("mousemove", e => {
 	resultContainerBound = {
 		left: resultContainer.getBoundingClientRect().left,
 		top: resultContainer.getBoundingClientRect().top,
 	};
-	if(generatedPassword){
+	if (generatedPassword) {
 		copyBtn.style.opacity = '1';
 		copyBtn.style.pointerEvents = 'all';
 		copyBtn.style.setProperty("--x", `${e.x - resultContainerBound.left}px`);
 		copyBtn.style.setProperty("--y", `${e.y - resultContainerBound.top}px`);
-	}else{
+	} else {
 		copyBtn.style.opacity = '0';
 		copyBtn.style.pointerEvents = 'none';
 	}
 });
-window.addEventListener("resize", e => {
+
+window.addEventListener("resize", () => {
 	resultContainerBound = {
 		left: resultContainer.getBoundingClientRect().left,
 		top: resultContainer.getBoundingClientRect().top,
 	};
 });
 
-// Copy Password in clipboard
+// Copy Password to clipboard
 copyBtn.addEventListener("click", () => {
 	const textarea = document.createElement("textarea");
 	const password = resultEl.innerText;
-	if (!password || password == "CLICK GENERATE") {
+	if (!password || password === "CLICK GENERATE") {
 		return;
 	}
 	textarea.value = password;
@@ -143,7 +146,7 @@ copyBtn.addEventListener("click", () => {
 	copiedInfo.style.opacity = "0.75";
 });
 
-// When Generate is clicked Password id generated.
+// When Generate is clicked, Password is generated.
 generateBtn.addEventListener("click", () => {
 	const length = +lengthEl.value;
 	const hasLower = lowercaseEl.checked;
@@ -158,39 +161,20 @@ generateBtn.addEventListener("click", () => {
 	copiedInfo.style.opacity = "0";
 });
 
-// Function responsible to generate password and then returning it.
-function generatePassword(length, lower, upper, number, symbol) {
-	let generatedPassword = "";
-	const typesCount = lower + upper + number + symbol;
-	const typesArr = [{ lower }, { upper }, { number }, { symbol }].filter(item => Object.values(item)[0]);
-	if (typesCount === 0) {
-		return "";
-	}
-	for (let i = 0; i < length; i++) {
-		typesArr.forEach(type => {
-			const funcName = Object.keys(type)[0];
-			generatedPassword += randomFunc[funcName]();
-		});
-	}
-	return generatedPassword.slice(0, length)
-									.split('').sort(() => Math.random() - 0.5)
-									.join('');
-}
-
-// function that handles the checkboxes state, so at least one needs to be selected. The last checkbox will be disabled.
-function disableOnlyCheckbox(){
-	let totalChecked = [uppercaseEl, lowercaseEl, numberEl, symbolEl].filter(el => el.checked)
+// Function that handles the checkboxes state, so at least one needs to be selected. The last checkbox will be disabled.
+function disableOnlyCheckbox() {
+	let totalChecked = [uppercaseEl, lowercaseEl, numberEl, symbolEl].filter(el => el.checked);
 	totalChecked.forEach(el => {
-		if(totalChecked.length == 1){
+		if (totalChecked.length === 1) {
 			el.disabled = true;
-		}else{
+		} else {
 			el.disabled = false;
 		}
-	})
+	});
 }
 
 [uppercaseEl, lowercaseEl, numberEl, symbolEl].forEach(el => {
 	el.addEventListener('click', () => {
-		disableOnlyCheckbox()
-	})
-})
+		disableOnlyCheckbox();
+	});
+});
