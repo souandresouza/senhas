@@ -207,7 +207,7 @@ button:hover {
 .settings {
   position: relative;
   height: auto;
-  widows: 100%;
+  width: 100%; /* Corrected typo from 'widows' to 'width' */
   display: flex;
   flex-direction: column;
 }
@@ -274,7 +274,7 @@ button:hover {
 }
 
 .settings .setting input:disabled + label:before,
-.settings .setting input:disabled + label:after {
+.settings .setting input:disabled + label::after {
   cursor: not-allowed;
 }
 
