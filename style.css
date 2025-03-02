@@ -44,7 +44,7 @@ button:hover {
   font-size: 1.75rem;
   margin: 10px -5px;
   margin-bottom: 30px;
-  color: #fff;
+  color: #fff; /* Ensure title is white */
 }
 
 .result {
@@ -57,7 +57,7 @@ button:hover {
 .result__info {
   position: absolute;
   bottom: 4px;
-  color: #fff;
+  color: #fff; /* Ensure info text is white */
   font-size: 0.8rem;
   transition: all 150ms ease-in-out;
   transform: translateY(200%);
@@ -77,9 +77,62 @@ button:hover {
   height: 100%;
   background: rgba(255, 255, 255, 0.08);
   border-radius: 8px;
-  color: #fff;
+  color: #fff; /* Ensure viewbox text is white */
   text-align: center;
   line-height: 65px;
+}
+
+.field-title {
+  position: absolute;
+  top: -10px;
+  left: 8px;
+  transform: translateY(-50%);
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.5); /* Light tone for field titles */
+  text-transform: uppercase;
+  font-size: 0.65rem;
+  pointer-events: none;
+  user-select: none;
+}
+
+.range__slider::before,
+.range__slider::after {
+  position: absolute;
+  color: #fff; /* Ensure slider labels are white */
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.range__slider .length__title::after {
+  content: attr(data-length);
+  position: absolute;
+  right: -16px;
+  font-variant-numeric: tabular-nums;
+  color: #fff; /* Ensure length title is white */
+}
+
+.settings .setting {
+  position: relative;
+  width: 100%;
+  height: calc(65px - 10px);
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding: 10px 25px;
+  color: #fff; /* Ensure settings text is white */
+  margin-bottom: 8px;
+}
+
+a {
+  margin: 0 20px;
+  color: #fff; /* Ensure links are white */
+  font-size: 2rem;
+  transition: all 400ms ease;
+}
+
+a:hover {
+  color: #222;
 }
 
 .result #copy-btn {
@@ -104,19 +157,6 @@ button:hover {
 .result:hover #copy-btn {
   opacity: 1;
   transform: translate(-50%, -50%) scale(1.35);
-}
-
-.field-title {
-  position: absolute;
-  top: -10px;
-  left: 8px;
-  transform: translateY(-50%);
-  font-weight: 800;
-  color: rgba(255, 255, 255, 0.5);
-  text-transform: uppercase;
-  font-size: 0.65rem;
-  pointer-events: none;
-  user-select: none;
 }
 
 .options {
