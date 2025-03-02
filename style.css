@@ -343,6 +343,10 @@ a:hover {
   transition: all 150ms ease;
 }
 
+#slider-value {
+color: #fff; /* Set the font colr to white */
+}
+
 .btn.generate:active {
   transform: translateY(-3%);
   box-shadow: 0 4px 8px rgba(255, 255, 255, 0.08);
