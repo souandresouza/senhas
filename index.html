@@ -22,7 +22,8 @@
         <div class="length__title field-title">Caracteres:</div>
         <div class="length__controls">
             <label for="slider" class="visually-hidden">Número de caracteres da senha</label>
-            <input id="slider" type="number" min="4" max="32" value="16" aria-label="Número de caracteres da senha" />
+            <input id="slider" type="range" min="4" max="32" value="16" aria-label="Número de caracteres da senha" />
+            <span id="slider-value">16</span> <!-- Display the initial value -->
         </div>
     </div>
     <div class="settings">
@@ -50,9 +51,15 @@
 <script>
   // Script para gerar senhas
   const slider = document.getElementById('slider');
+  const sliderValue = document.getElementById('slider-value'); // Get the span element
   const result = document.getElementById('result');
   const copyBtn = document.getElementById('copy-btn');
   const generateBtn = document.getElementById('generate');
+
+  // Update the displayed value when the slider changes
+  slider.addEventListener('input', () => {
+    sliderValue.textContent = slider.value;
+  });
 
   function generatePassword() {
     let length = parseInt(slider.value, 10);
